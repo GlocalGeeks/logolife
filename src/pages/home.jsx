@@ -1,0 +1,71 @@
+import React, { Suspense, lazy, useEffect, useState } from 'react';
+
+import { Helmet } from 'react-helmet-async';
+import '../styles/fonts.css';
+import Navbar from '../Components/Navbar/Navbar';
+import Hero from '../Components/Hero/Hero';
+import HeroFacts from '../Components/HeroFacts/HeroFacts';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import LogoCarousel from '../Components/LogoCarousel/LogoCarousel';
+import TestimonialSection from "../Components/TestimonialSection/TestimonialSection";
+import AdvantageSection from '../Components/AdvantageSection/AdvantageSection';
+const CalendlySection = lazy(() => import('../Components/CalendlySection/CalendlySection'));
+import ExpertsSection from '../Components/ExpertsSection/ExpertsSection';
+
+export const Home = () => {
+
+  const [isCalendlyVisible, setCalendlyVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 1800) {
+        setCalendlyVisible(true);
+      } else {
+        setCalendlyVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+
+
+  return (
+    <div>
+      <Helmet>
+        <title>Computer Science and Tech Programs College Counseling</title>
+        <meta
+          name="description"
+          content="College Admissions counseling for top computer science and tech programs. Boost your chances of admission with personalized strategies and expert guidance."
+        />
+        <meta
+          name="keywords"
+          content="College Admissions Counseling, Computer Science Programs, Top Tech Programs, tech programs, college counseling, computer science programs, tech programs, admission strategies, personalized college guidance, expert counseling, tech admissions"
+        />
+        {/* Preload Video File */}
+        <link rel="preload" href="/assets/hero_section_short.mp4" as="video" type="video/mp4" />
+      </Helmet>
+
+      <Navbar />
+      <Hero />
+      <HeroFacts />
+      <LogoCarousel />
+      <TestimonialSection />
+      <ExpertsSection />
+      <AdvantageSection />
+      {isCalendlyVisible && (
+        <div>
+          <CalendlySection />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Home;
