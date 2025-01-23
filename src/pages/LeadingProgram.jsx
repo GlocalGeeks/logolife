@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {lazy, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import '../styles/fonts.css';
 import Navbar from '../Components/Navbar/Navbar';
@@ -8,12 +8,35 @@ import "slick-carousel/slick/slick-theme.css";
 import LogoCarousel from '../Components/LogoCarousel/LogoCarousel';
 import TestimonialSection from "../Components/TestimonialSection/TestimonialSection"
 import AdvantageSection from '../Components/AdvantageSection/AdvantageSection';
-import CalendlySection from "../Components/CalendlySection/CalendlySection"
+const CalendlySection = lazy(() => import('../Components/CalendlySection/CalendlySection'));
 import ExpertsSection from '../Components/ExpertsSection/ExpertsSection';
 import TechHero from '../Components/TechHero/TechHero';
 import TechHeroLogo from '../Components/TechHeroLogo/TechHeroLogo';
 
 export const LeadingProgram = () => {
+  const [isCalendlyVisible, setCalendlyVisible] = useState(false);
+    useEffect(() => {
+      const handleScroll = () => {
+        const isMobile = window.innerWidth <= 768; // Mobile breakpoint
+        if (isMobile) {
+          setCalendlyVisible(window.scrollY > 1500); // Visible after scrolling 1000px
+        } else {
+          setCalendlyVisible(true); // Always visible on desktop/tablet
+        }
+      };
+  
+      // Run on initial render to set visibility based on screen size
+      handleScroll();
+  
+      window.addEventListener('scroll', handleScroll);
+  
+      // Cleanup event listener on component unmount
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }, []);
+
+
   return (
     <div>
       <Helmet>
@@ -34,7 +57,13 @@ export const LeadingProgram = () => {
       <TestimonialSection />
       <ExpertsSection />
       <AdvantageSection />
-      <CalendlySection />
+      {isCalendlyVisible && (
+        <div>
+          <CalendlySection />
+        </div>
+      )}
+
+      <div id="calendly"></div>
     </div>
   )
 }

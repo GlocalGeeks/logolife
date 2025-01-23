@@ -1,5 +1,4 @@
-import React, { Suspense, lazy, useEffect, useState } from 'react';
-
+import React, {lazy, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import '../styles/fonts.css';
 import Navbar from '../Components/Navbar/Navbar';
@@ -14,17 +13,20 @@ const CalendlySection = lazy(() => import('../Components/CalendlySection/Calendl
 import ExpertsSection from '../Components/ExpertsSection/ExpertsSection';
 
 export const Home = () => {
-
   const [isCalendlyVisible, setCalendlyVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 1800) {
-        setCalendlyVisible(true);
+      const isMobile = window.innerWidth <= 768; // Mobile breakpoint
+      if (isMobile) {
+        setCalendlyVisible(window.scrollY > 1500); // Visible after scrolling 1000px
       } else {
-        setCalendlyVisible(false);
+        setCalendlyVisible(true); // Always visible on desktop/tablet
       }
     };
+
+    // Run on initial render to set visibility based on screen size
+    handleScroll();
 
     window.addEventListener('scroll', handleScroll);
 
@@ -33,8 +35,6 @@ export const Home = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-
 
   return (
     <div>
@@ -59,11 +59,14 @@ export const Home = () => {
       <TestimonialSection />
       <ExpertsSection />
       <AdvantageSection />
+
       {isCalendlyVisible && (
         <div>
           <CalendlySection />
         </div>
       )}
+
+      <div id="calendly"></div>
     </div>
   );
 };
